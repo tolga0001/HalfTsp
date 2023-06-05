@@ -22,7 +22,7 @@ public class HalfTSP {
         //   ArrayList<City> cities = new ArrayList<>();
         ArrayList<City> initialTour = getTour(cities);
         int TourDistance = getTourDistance(initialTour);
-        write_to_file(TourDistance, initialTour);
+        write_to_file(TourDistance,initialTour);
 
 
         // opt3(cities, 0, 2, 4);
@@ -36,14 +36,15 @@ public class HalfTSP {
 
     private static void write_to_file(int tourDistance, ArrayList<City> initialTour) {
         try (PrintWriter writer = new PrintWriter("output.txt")) {
-            int tourLength = getTourDistance(initialTour);
-            writer.println(tourLength);
+            writer.println(tourDistance);
+            System.out.println("len is+ "+tourDistance);
             for (City city : initialTour) {
-                writer.println(city.id);
+              writer.println(city.id);
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+
 
 
     }
@@ -248,49 +249,49 @@ public class HalfTSP {
     }
 
     // Changes the order of travelling for shorter route
-    private static ArrayList<City> change(ArrayList<City> cities, int cityIndex, int caseIndex) {
-        City b = copyCity(cities.get(cityIndex + 1));
-        City c = copyCity(cities.get(cityIndex + 2));
-        City d = copyCity(cities.get(cityIndex + 3));
-        City e = copyCity(cities.get(cityIndex + 4));
+    private static ArrayList<City> change(ArrayList<City> cities, int startingIndex, int caseIndex) {
+        City b = copyCity(cities.get(startingIndex + 1));
+        City c = copyCity(cities.get(startingIndex + 2));
+        City d = copyCity(cities.get(startingIndex + 3));
+        City e = copyCity(cities.get(startingIndex + 4));
         // Case 1: A→C→B→D→E→F
         if (caseIndex == 1) {
-            cities.set(cityIndex + 1, c);
-            cities.set(cityIndex + 2, b);
+            cities.set(startingIndex + 1, c);
+            cities.set(startingIndex + 2, b);
         }// Case 2: A→B→C→E→D→F
         else if (caseIndex == 2) {
-            cities.set(cityIndex + 3, e);
-            cities.set(cityIndex + 4, d);
+            cities.set(startingIndex + 3, e);
+            cities.set(startingIndex + 4, d);
         }// Case 3: A→E→D→C→B→F
         else if (caseIndex == 3) {
-            cities.set(cityIndex + 1, e);
-            cities.set(cityIndex + 2, d);
-            cities.set(cityIndex + 3, c);
-            cities.set(cityIndex + 4, b);
+            cities.set(startingIndex + 1, e);
+            cities.set(startingIndex + 2, d);
+            cities.set(startingIndex + 3, c);
+            cities.set(startingIndex + 4, b);
         }// Case 4: A→D→E→B→C→F
         else if (caseIndex == 4) {
-            cities.set(cityIndex + 1, d);
-            cities.set(cityIndex + 2, e);
-            cities.set(cityIndex + 3, b);
-            cities.set(cityIndex + 4, c);
+            cities.set(startingIndex + 1, d);
+            cities.set(startingIndex + 2, e);
+            cities.set(startingIndex + 3, b);
+            cities.set(startingIndex + 4, c);
         }// Case 5: A→D→E→C→B→F
         else if (caseIndex == 5) {
-            cities.set(cityIndex + 1, d);
-            cities.set(cityIndex + 2, e);
-            cities.set(cityIndex + 3, c);
-            cities.set(cityIndex + 4, b);
+            cities.set(startingIndex + 1, d);
+            cities.set(startingIndex + 2, e);
+            cities.set(startingIndex + 3, c);
+            cities.set(startingIndex + 4, b);
         }// Case 6: A→C→B→E→D→F
         else if (caseIndex == 6) {
-            cities.set(cityIndex + 1, c);
-            cities.set(cityIndex + 2, b);
-            cities.set(cityIndex + 3, e);
-            cities.set(cityIndex + 4, d);
+            cities.set(startingIndex + 1, c);
+            cities.set(startingIndex + 2, b);
+            cities.set(startingIndex + 3, e);
+            cities.set(startingIndex + 4, d);
         }// Case 7: A→E→D→B→C→F
         else if (caseIndex == 7) {
-            cities.set(cityIndex + 1, e);
-            cities.set(cityIndex + 2, d);
-            cities.set(cityIndex + 3, b);
-            cities.set(cityIndex + 4, c);
+            cities.set(startingIndex + 1, e);
+            cities.set(startingIndex + 2, d);
+            cities.set(startingIndex + 3, b);
+            cities.set(startingIndex + 4, c);
         }
 
         return cities;
