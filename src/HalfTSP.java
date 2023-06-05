@@ -12,26 +12,41 @@ public class HalfTSP {
         String inputName = scanner.next();
         ArrayList<City> cities = readCities(inputName);
 
-        for (City city : cities) {
-            //  System.out.printf("id is %d,x is %d, y is %d\n", city.id, city.x, city.y);
-
-
-        }
-
+        long startTime = System.currentTimeMillis();
 
         //   ArrayList<City> cities = new ArrayList<>();
         ArrayList<City> initialTour = getTour(cities);
         int TourDistance = getTourDistance(initialTour);
-        write_to_file(TourDistance,initialTour);
+        //write_to_file(TourDistance,initialTour);
+
+
 
 
         // opt3(cities, 0, 2, 4);
-        System.out.println(TourDistance);
-        for (City city : initialTour) {
-            // System.out.printf("id is %d,x is %d, y is %d\n", city.id, city.x, city.y);
-            //  System.out.println(city.id);
+
+        ArrayList<City> optimizedTour = optimize(initialTour);
+        int optimizedDistance = getTourDistance(optimizedTour);
+        int currentDistance;
+        while(true){
+             optimizedTour= optimize(optimizedTour);
+             currentDistance  =  getTourDistance(optimizedTour);
+             if(optimizedDistance == currentDistance){
+                 break;
+             }
+             optimizedDistance = currentDistance;
 
         }
+
+
+
+        System.out.println("normal distance : " + TourDistance);
+        System.out.println("optimizedDistance: " + optimizedDistance);
+        write_to_file(optimizedDistance,optimizedTour);
+
+        long endTime = System.currentTimeMillis();
+
+        System.out.println("Time : " + (endTime - startTime)/1000  + "saniye");
+
     }
 
     private static void write_to_file(int tourDistance, ArrayList<City> initialTour) {
@@ -44,7 +59,6 @@ public class HalfTSP {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
 
 
     }
@@ -162,7 +176,11 @@ public class HalfTSP {
         City city;
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
-            String[] cityInfo = line.split(" ");
+            int index = findFirstNum(line);
+
+            String newline = line.substring(index);
+            String[] cityInfo = newline.split(" ");
+            //int [] numbers = getNumbers(cityInfo);
             id = Integer.parseInt(cityInfo[0]);
             x = Integer.parseInt(cityInfo[1]);
             y = Integer.parseInt(cityInfo[2]);
@@ -173,9 +191,115 @@ public class HalfTSP {
         return cities;
     }
 
+    /*private static int[] getNumbers(String[] cityInfo) {
+
+        for (int i = 0; i < cityInfo.length; i++) {
+
+        }
+
+    }*/
+
+    private static int findFirstNum(String line) {
+
+        char ch;
+        for (int i = 0; i < line.length(); i++) {
+            ch = line.charAt(i);
+            if(Character.isDigit(ch)) return i;
+        }
+
+        return -1;
+
+
+    }
+
     private static ArrayList<City> optimize(ArrayList<City> cities) {
         // TODO
+
+        int lengthOfCities = cities.size();
+
+        int i = 0;
+        // 1 2 3 4 5 6
+        // 2 3 4 5 6 7
+
+        while(i<lengthOfCities-5){
+
+
+            cities = opt3(cities,i,i+2,i+4);
+            i ++;
+        }
+
         return cities;
+    }
+
+    private static boolean isSmallest(ArrayList<City> cities, int a, int c, int e) {
+        int dist0 = distance(cities.get(a), cities.get(a + 1)) +
+                distance(cities.get(c), cities.get(c + 1)) +
+                distance(cities.get(e), cities.get(e + 1));
+        // Case 1: A→C→B→D→E→F
+        int dist1 = distance(cities.get(a), cities.get(c)) +
+                distance(cities.get(a + 1), cities.get(c + 1)) +
+                distance(cities.get(e), cities.get(e + 1));
+        // Case 2: A→B→C→E→D→F
+        int dist2 = distance(cities.get(a), cities.get(a + 1)) +
+                distance(cities.get(c), cities.get(e)) +
+                distance(cities.get(c + 1), cities.get(e + 1));
+        // Case 3: A→E→D→C→B→F
+        int dist3 = distance(cities.get(a), cities.get(e)) +
+                distance(cities.get(c + 1), cities.get(c)) +
+                distance(cities.get(a + 1), cities.get(e + 1));
+        // Case 4: A→D→E→B→C→F
+        int dist4 = distance(cities.get(a), cities.get(c + 1)) +
+                distance(cities.get(e), cities.get(a + 1)) +
+                distance(cities.get(c), cities.get(e + 1));
+        // Case 5: A→D→E→C→B→F
+        int dist5 = distance(cities.get(a), cities.get(c + 1)) +
+                distance(cities.get(e), cities.get(c)) +
+                distance(cities.get(a + 1), cities.get(e + 1));
+        // Case 6: A→C→B→E→D→F
+        int dist6 = distance(cities.get(a), cities.get(c)) +
+                distance(cities.get(a + 1), cities.get(e)) +
+                distance(cities.get(c + 1), cities.get(e + 1));
+        // Case 7: A→E→D→B→C→F
+        int dist7 = distance(cities.get(a), cities.get(e)) +
+                distance(cities.get(c + 1), cities.get(a + 1)) +
+                distance(cities.get(c), cities.get(e + 1));
+
+        int minDist = dist0;
+        int caseIndex = 0;
+
+        if (dist1 < minDist) {
+            minDist = dist1;
+            caseIndex = 1;
+        }
+        if (dist2 < minDist) {
+            minDist = dist2;
+            caseIndex = 2;
+        }
+        if (dist3 < minDist) {
+            minDist = dist3;
+            caseIndex = 3;
+        }
+        if (dist4 < minDist) {
+            minDist = dist4;
+            caseIndex = 4;
+        }
+        if (dist5 < minDist) {
+            minDist = dist5;
+            caseIndex = 5;
+        }
+        if (dist6 < minDist) {
+            minDist = dist5;
+            caseIndex = 6;
+        }
+        if (dist7 < minDist) {
+            minDist = dist5;
+            caseIndex = 7;
+        }
+
+        if (caseIndex == 0) return true;
+
+        return false;
+
     }
 
     // Finds the most optimized path for given 6 cities
