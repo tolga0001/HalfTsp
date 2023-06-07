@@ -49,7 +49,6 @@ public class HalfTSP {
     private static void write_to_file(int tourDistance, ArrayList<City> initialTour) {
         try (PrintWriter writer = new PrintWriter("output.txt")) {
             writer.println(tourDistance);
-            System.out.println("len is+ " + tourDistance);
             for (City city : initialTour) {
                 writer.println(city.id);
             }
@@ -353,8 +352,8 @@ public class HalfTSP {
 
     // Calculates the distance between 2 given cities
     public static int distance(City city1, City city2) {
-        int dx = city1.x - city2.x;
-        int dy = city1.y - city2.y;
+        double dx = city1.x - city2.x;
+        double dy = city1.y - city2.y;
         return (int) Math.round(Math.sqrt(dx * dx + dy * dy));
     }
 }
