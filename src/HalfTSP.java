@@ -5,22 +5,30 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class HalfTSP {
+    // Tolga Fehmioğlu 150120022
+    // Mehmet Toprak Balıkçı 150121032
+    // Enes Torluoğlu 150121002
+    // Muhammed Enes Gökdeniz 150121538
+
+    /**
+     * The aim of this homework is to find the best solution as much as possible to Half TSP which is basically a hard
+     * NP problem in a reasonable time.
+     */
+
 
     public static void main(String[] args) {
+        //In this function we take input file’s name, then read the cities in the input file and call
+        //getTour() function to get initial tour and optimize() function the tour.
+        //Then it prints the optimized tour. Also, calculates the time passed.
+
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter the input: ");
         String inputName = scanner.next();
         ArrayList<City> cities = readCities(inputName);
 
         long startTime = System.currentTimeMillis();
-
-        //   ArrayList<City> cities = new ArrayList<>();
-        ArrayList<City> initialTour =  getTour(cities);
+        ArrayList<City> initialTour = getTour(cities);
         int TourDistance = getTourDistance(initialTour);
-        //write_to_file(TourDistance,initialTour);
-
-
-        // opt3(cities, 0, 2, 4);
 
         ArrayList<City> optimizedTour = optimize(initialTour);
         int optimizedDistance = getTourDistance(optimizedTour);
@@ -46,6 +54,7 @@ public class HalfTSP {
 
     }
 
+    // This function creates output.txt file and writes the tour to this file.
     private static void write_to_file(int tourDistance, ArrayList<City> initialTour) {
         try (PrintWriter writer = new PrintWriter("output.txt")) {
             writer.println(tourDistance);
@@ -59,6 +68,7 @@ public class HalfTSP {
 
     }
 
+    // This function calculates the given tour’s distance.
     private static int getTourDistance(ArrayList<City> initialTour) {
         int distance = 0;
         City firstCity = initialTour.get(0);
@@ -73,6 +83,7 @@ public class HalfTSP {
         return distance;
     }
 
+    // This function returns the initial tour that is found using the  nearest neighbor algorithm.
     private static ArrayList<City> getTour(ArrayList<City> cities) {
 
         ArrayList<City> initialTour = new ArrayList<>();
@@ -90,6 +101,7 @@ public class HalfTSP {
         return initialTour;
 
     }
+    // Finds closest city to the given currentCity.
 
     private static City getNeighbourCity(City currentCity, ArrayList<City> cities, ArrayList<City> initialTour) {
         int min = Integer.MAX_VALUE;
@@ -107,6 +119,7 @@ public class HalfTSP {
         return closestCity;
 
     }
+    // This function finds the first city to start the initial tour.
 
     private static City getFirstCity(ArrayList<City> cities) {
         int averageX = getAverageX(cities);
@@ -114,6 +127,7 @@ public class HalfTSP {
         return getMiddleCity(averageX, averageY, cities);
     }
 
+    // This function finds the arithmetic mean of all cities’ coordinates.
     private static City getMiddleCity(int averageX, int averageY, ArrayList<City> cities) {
         City closerMiddle = null;
         int minDistance = Integer.MAX_VALUE;
@@ -130,12 +144,14 @@ public class HalfTSP {
 
     }
 
+    // Finds the distance between arithmetic mean and the given city.
     private static int getDistance(int averageX, int averageY, City firstCity) {
         int dx = firstCity.x - averageX;
         int dy = firstCity.y - averageY;
         return (int) Math.round(Math.sqrt(dx * dx + dy * dy));
     }
 
+    // Finds mean Y coordinate of all cities.
     private static int getAverageY(ArrayList<City> cities) {
         int size = cities.size();
         int totalY = 0;
@@ -147,6 +163,7 @@ public class HalfTSP {
         return totalY / size;
     }
 
+    // Finds mean X coordinate of all cities.
     private static int getAverageX(ArrayList<City> cities) {
         int size = cities.size();
         int totalX = 0;
@@ -159,6 +176,7 @@ public class HalfTSP {
 
     }
 
+    // 	Reads all cities from input file and puts them in an array list.
     private static ArrayList<City> readCities(String inputName) {
         ArrayList<City> cities = new ArrayList<>();
         File file = new File(inputName);
@@ -184,6 +202,8 @@ public class HalfTSP {
         return cities;
     }
 
+    //Finds cities’ ids, X and Y coordinates.
+
     private static int[] getNumbers(String[] lineElements) {
         int[] numbers = new int[3];
         int i = 0;
@@ -198,15 +218,7 @@ public class HalfTSP {
 
     }
 
-    /*private static int[] getNumbers(String[] cityInfo) {
-
-        for (int i = 0; i < cityInfo.length; i++) {
-
-        }
-
-    }*/
-
-
+    // This function takes the initial tour and optimizes it using opt3() function.
     private static ArrayList<City> optimize(ArrayList<City> cities) {
         // TODO
 
@@ -296,7 +308,7 @@ public class HalfTSP {
         else return change(cities, a, caseIndex);
     }
 
-    // Changes the order of travelling for shorter route
+    // Called from opt3 to change the route for a shorter route.
     private static ArrayList<City> change(ArrayList<City> cities, int startingIndex, int caseIndex) {
         City b = copyCity(cities.get(startingIndex + 1));
         City c = copyCity(cities.get(startingIndex + 2));
